@@ -6,7 +6,7 @@ import { db } from "@/firebase/config";
 import { Platform } from "react-native";
 
 const BG_TASK = "adeux-bg-fetch";
-const EXPO_PROJECT_ID = "72b9d676-075e-4bd5-bbb2-a05650a52155";
+const EXPO_PROJECT_ID = "0159de2c-8884-49cb-b5de-ee5f72d0499b";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -106,4 +106,32 @@ export async function scheduleLocalNotification(title: string, body: string) {
     content: { title, body, sound: true },
     trigger: null,
   });
+}
+
+export async function sendPushNotification(
+  expoPushToken: string,
+  senderName: string,
+  messageText: string
+): Promise<void> {
+  const preview = messageText.length > 60 ? messageText.slice(0, 57) + "…" : messageText;
+  try {
+    await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Accept-encoding": "gzip, deflate",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        to: expoPushToken,
+        sound: "default",
+        title: `💚 ${senderName}`,
+        body: preview,
+        channelId: "messages",
+        data: { screen: "chat" },
+      }),
+    });
+  } catch {
+    // Échec silencieux — le message est déjà dans Firestore
+  }
 }

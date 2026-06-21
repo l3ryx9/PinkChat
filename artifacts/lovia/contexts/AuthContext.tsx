@@ -5,7 +5,12 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import { Platform } from "react-native";
 import { auth, db, storage } from "@/firebase/config";
+import {
+  registerForPushNotifications,
+  savePushToken,
+} from "@/services/notifications";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
@@ -86,6 +91,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     });
     return unsub;
+  }, [user?.uid]);
+
+  useEffect(() => {
+    if (!user || Platform.OS === "web") return;
+    registerForPushNotifications().then((token) => {
+      if (token) savePushToken(user.uid, token);
+    });
   }, [user?.uid]);
 
   const signIn = useCallback(async (email: string, password: string) => {

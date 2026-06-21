@@ -36,6 +36,7 @@ import {
 
 import { useAuth } from "@/contexts/AuthContext";
 import { db } from "@/firebase/config";
+import { sendPushNotification } from "@/services/notifications";
 import { saveMessages, loadMessages } from "@/services/sqlite";
 import {
   analyzeConversation,
@@ -565,6 +566,15 @@ export default function MessagesScreen() {
         deliveredAt: null,
         readAt: null,
       });
+      // Envoi notification push au partenaire
+      const tokenSnap = await import("firebase/firestore").then(({ getDoc, doc: firestoreDoc }) =>
+        getDoc(firestoreDoc(db, "push_tokens", partnerId))
+      );
+      if (tokenSnap.exists()) {
+        const token = tokenSnap.data().token as string;
+        const senderName = profile?.displayName || "Votre partenaire";
+        sendPushNotification(token, senderName, content);
+      }
     } catch (err) {
       console.error("[Firestore] Envoi message échoué:", err);
     } finally {
