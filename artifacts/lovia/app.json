@@ -17,7 +17,8 @@
       "supportsTablet": false
     },
     "android": {
-      "backgroundColor": "#0a140f"
+      "backgroundColor": "#0a140f",
+      "package": "com.adeux.app"
     },
     "web": {
       "favicon": "./assets/images/icon.png"
@@ -35,6 +36,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "0159de2c-8884-49cb-b5de-ee5f72d0499b"
+      }
+    },
+    "owner": "l3ryx9"
   }
 }
