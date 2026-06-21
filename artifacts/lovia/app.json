@@ -18,7 +18,8 @@
     },
     "android": {
       "backgroundColor": "#0a140f",
-      "package": "com.adeux.app"
+      "package": "com.adeux.app",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/images/icon.png"
